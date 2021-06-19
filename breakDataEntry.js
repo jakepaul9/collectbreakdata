@@ -149,7 +149,7 @@ document.getElementById("dt-eofd").addEventListener("click", () => {
   let access = prompt("Password");
   if (access == "Farid") {
     let employees = JSON.parse(localStorage.getItem("employees"));
-    let output = "Name,Date,Task,Duration\n";
+    let output = "";
     for (emp of employees) {
       for (p of emp.punches) {
         if (p.date != "") {
