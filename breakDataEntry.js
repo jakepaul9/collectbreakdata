@@ -1,5 +1,18 @@
 let punches = [];
 let empOptions = "";
+let css = `
+  #dt-start:active {
+    background-color: green !important;
+    color:white !important;
+  } 
+  #dt-end:active {
+    background-color: red !important;
+    color:white !important;
+  }
+  #dt-eofd:active {
+    background-color: white !important;
+    color:black !important;
+  }`;
 
 for (emp of names) {
   empOptions += `<option value="${emp.toLowerCase()}">${emp}</option>`;
@@ -13,10 +26,13 @@ if (localStorage.getItem("employees") === null) {
 }
 
 function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-  element.style.display = 'none';
+  var element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+  );
+  element.setAttribute("download", filename);
+  element.style.display = "none";
   document.body.appendChild(element);
   element.click();
   document.body.removeChild(element);
@@ -48,9 +64,11 @@ const startDT = () => {
             (e[plen].start = Date.now()),
             (e[plen].duration = 0);
         } else {
-            let newDate = new Date(e[plen].start);
-            let datestr = `${newDate.toDateString()} ${newDate.toTimeString()}`;
-          alert(`You Haven't ended your last punch you started at \n${datestr}`);
+          let newDate = new Date(e[plen].start);
+          let datestr = `${newDate.toDateString()} ${newDate.toTimeString()}`;
+          alert(
+            `You Haven't ended your last punch you started at \n${datestr}`
+          );
         }
       }
     }
@@ -124,27 +142,29 @@ container.innerHTML = `
   </div>
 `;
 document.body.prepend(container);
-// $('<style>').text(css).appendTo(document.head)
+$("<style>").text(css).appendTo(document.head);
 
-document.getElementById('dt-eofd').addEventListener('click', () => {
-  console.log('here')
-  let access = prompt("Password")
-  if(access == 'Farid'){
+document.getElementById("dt-eofd").addEventListener("click", () => {
+  console.log("here");
+  let access = prompt("Password");
+  if (access == "Farid") {
     let employees = JSON.parse(localStorage.getItem("employees"));
-    let output ='Name,Date,Task,Duration\n'
-    for(emp of employees){
-        for(p of emp.punches){
-          if(p.date != ''){
-            let date1 = new Date(p.date);
-            let day1 = `${date1.getMonth()}/${date1.getDate()}/${date1.getFullYear()}`
-            output += `${emp.name},${day1},${p.task},${Number(((p.duration/1000)/3600).toFixed(2))}\n`
-          }
+    let output = "Name,Date,Task,Duration\n";
+    for (emp of employees) {
+      for (p of emp.punches) {
+        if (p.date != "") {
+          let date1 = new Date(p.date);
+          let day1 = `${date1.getMonth()}/${date1.getDate()}/${date1.getFullYear()}`;
+          output += `${emp.name},${day1},${p.task},${Number(
+            (p.duration / 1000 / 3600).toFixed(2)
+          )}\n`;
         }
+      }
     }
     let date2 = new Date();
-    let day2 = `${date2.getMonth()}-${date2.getDate()}-${date2.getFullYear()}`
-    download(`BreakData_${day2}.csv`, output)
-    alert('Data Downloaded and Cache Cleared')
+    let day2 = `${date2.getMonth()}-${date2.getDate()}-${date2.getFullYear()}`;
+    download(`BreakData_${day2}.csv`, output);
+    alert("Data Downloaded and Cache Cleared");
     localStorage.setItem("employees", JSON.stringify(punches));
   }
-})
+});
